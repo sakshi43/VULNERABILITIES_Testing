@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Security Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .severity-Critical {
+            background-color: #fee2e2;
+            border-left: 6px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .severity-High {
+            background-color: #ffedd5;
+            border-left: 6px solid #ea580c;
+            color: #9a3412;
+        }
+
+        .severity-Medium {
+            background-color: #fef9c3;
+            border-left: 6px solid #ca8a04;
+            color: #854d0e;
+        }
+
+        .severity-Low {
+            background-color: #f0fdf4;
+            border-left: 6px solid #16a34a;
+            color: #166534;
+        }
+
+        .badge-Critical {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .badge-High {
+            background-color: #ea580c;
+            color: white;
+        }
+
+        .badge-Medium {
+            background-color: #ca8a04;
+            color: white;
+        }
+
+        .badge-Low {
+            background-color: #16a34a;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen font-sans">
+
+    <nav class="bg-slate-800 text-white p-6 shadow-lg mb-8">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl font-bold tracking-tight uppercase">
+                <i class="fas fa-shield-virus mr-2"></i> API Security Scanner
+            </h1>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 max-w-5xl">
+
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8 border border-gray-100">
+            <form action="/scanning" method="POST" class="flex flex-col md:flex-row gap-4">
+                <div class="flex-grow">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enter API URL to Scan:</label>
+                    <input type="url" name="endpoint" placeholder="https://api.example.com" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit"
+                        class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-all transform hover:scale-105">
+                        Scan Now
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-list-check text-blue-600 mr-2"></i> What We Check
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex gap-3">
+                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-xs h-fit">API1</span>
+                        <div>
+                            <p class="font-semibold text-sm text-gray-800">Broken Object Level Authorization</p>
+                            <p class="text-xs text-gray-500">Ensuring users can't access data that doesn't belong to
+                                them by changing IDs.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-xs h-fit">API2</span>
+                        <div>
+                            <p class="font-semibold text-sm text-gray-800">Broken Authentication</p>
+                            <p class="text-xs text-gray-500">Checking for weak tokens, lack of rotation, or exposed
+                                credentials.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-xs h-fit">API4</span>
+                        <div>
+                            <p class="font-semibold text-sm text-gray-800">Unrestricted Resource Consumption</p>
+                            <p class="text-xs text-gray-500">Scanning for lack of rate limiting (DoS protection).</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-sm">
+                <h3 class="text-xl font-bold mb-4 flex items-center text-blue-400">
+                    <i class="fas fa- vault mr-2"></i> Essential Security Headers
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <code class="text-pink-400 text-xs">Content-Security-Policy</code>
+                        <span class="text-[10px] bg-slate-700 px-2 py-1 rounded uppercase">Prevents XSS</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <code class="text-pink-400 text-xs">Strict-Transport-Security</code>
+                        <span class="text-[10px] bg-slate-700 px-2 py-1 rounded uppercase">Forces HTTPS</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <code class="text-pink-400 text-xs">X-Content-Type-Options</code>
+                        <span class="text-[10px] bg-slate-700 px-2 py-1 rounded uppercase">Stops Sniffing</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <code class="text-pink-400 text-xs">X-Frame-Options</code>
+                        <span class="text-[10px] bg-slate-700 px-2 py-1 rounded uppercase">Anti-Clickjacking</span>
+                    </div>
+                </div>
+                <p class="mt-6 text-xs text-slate-400 italic">
+                    <i class="fas fa-info-circle mr-1"></i> These headers are the first line of defense for any modern
+                    API.
+                </p>
+            </div>
+        </div>
+
+        {% if scan_results %}
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 mb-12">
+
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800">Security Report for:
+                        <span class="text-blue-600 font-mono text-sm ml-2">{{ scan_results.url }}</span>
+                    </h2>
+                </div>
+                <a href="/download"
+                    class="flex items-center gap-2 bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-900 transition-colors">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <div class="lg:col-span-2 space-y-4">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">Vulnerabilities Detected ({{
+                        scan_results.vulnerabilities|length }})</h3>
+
+                    {% for vuln in scan_results.vulnerabilities %}
+                    <div class="p-5 rounded-lg severity-{{ vuln.severity }} shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold flex items-center">
+                                <span class="px-2 py-0.5 rounded text-xs badge-{{ vuln.severity }} mr-3 uppercase">
+                                    {{ vuln.severity }}
+                                </span>
+                                {{ vuln.title }}
+                            </h4>
+                        </div>
+                        <p class="text-sm mb-3 opacity-90">{{ vuln.description }}</p>
+
+                        <div class="bg-white bg-opacity-50 p-3 rounded text-sm mt-3">
+                            <p><strong><i class="fas fa-tools mr-1"></i> Recommendation:</strong> {{ vuln.fix }}</p>
+                            {% if vuln.reference %}
+                            <a href="{{ vuln.reference }}" target="_blank"
+                                class="text-blue-600 hover:underline text-xs mt-2 inline-block">
+                                <i class="fas fa-external-link-alt mr-1"></i> More info
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    {% if not scan_results.vulnerabilities %}
+                    <div class="text-center py-10">
+                        <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                        <p class="text-gray-500 italic">No vulnerabilities found. Your API looks secure!</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 h-fit">
+                    <h3 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Key Fixes</h3>
+                    <ul class="space-y-3">
+                        {% for vuln in scan_results.vulnerabilities %}
+                        <li class="flex items-start gap-3 text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                            <span>{{ vuln.fix }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+   
+</body>
+
+</html>
