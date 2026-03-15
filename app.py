@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse,FileResponse
 from secure import scan_api
 from report import generate_pdf
 import uvicorn
+import traceback
 app=FastAPI()
 scan_results=None
 templates = Jinja2Templates(directory="templates")
@@ -21,16 +22,16 @@ async def scanning(request:Request,endpoint: str = Form(...)):
     except Exception as e:
         return templates.TemplateResponse('index.html',{'msg':str(e)})
 
-@app.post("/download")
+@app.get("/download")
 async def download():
-    
+    if scan_results is None:
+        return JSONResponse({'msg': 'No scan has been run yet'}, status_code=400)
     try:
         generate_pdf(scan_results)
-        return FileResponse("report.pdf", as_attachment=True)
-
-    except Exception  as e:
-        return JSONResponse({'msg':str(e)}),500
-
+        print(traceback.format_exc())
+        return FileResponse("report.pdf", filename="report.pdf")
+    except Exception as e:
+        return JSONResponse({'msg': str(e)}, status_code=500)
 
 
 if __name__=="__main__":
